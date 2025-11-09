@@ -84,11 +84,13 @@
               fetch('./map.json')
               .then(r => r.json())
               .then((r)=>{
-                setScale(r.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
+                setScale(r.scale ?? 1); 
+                setTx(0); 
+                setTy(0);
                 setImageUrl(r.imageUrl || DEFAULT_IMAGE_URL);
                 setMarkers(r.markers || []);
                 setCategories(r.categories || DEFAULT_CATEGORIES);
-                setActiveLayers(r.activeLayers || Object.fromEntries((s.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
+                setActiveLayers(r.activeLayers || Object.fromEntries((r.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
                 setMode(r.mode || "pan");
                 setActiveCat(r.activeCat || "site");
                 setSearch(r.search || "");
