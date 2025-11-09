@@ -1,6 +1,5 @@
 {
   "imageUrl": "Solmora2.jpg",
-  "scale": 0.3106354032375883,
   "imgNatural": {
     "w": 4250,
     "h": 3284
@@ -279,7 +278,7 @@
     {
       "id": "82bb7edc-8839-4740-8f66-9783499961d7",
       "x": 2057.3,
-      "y": 1839.0,
+      "y": 1839,
       "title": "Knight’s Respite",
       "category": "tavern",
       "icon": "🍺",
@@ -530,36 +529,36 @@
     },
     {
       "id": "367f763f-3158-4a81-a19d-93e7d5075646",
-      "x": 949.96,
-      "y": 800.66,
-      "title": "Northern Watch",
+      "x": 2051.5,
+      "y": 468.5,
+      "title": "Northern Gate",
       "category": "site",
       "icon": "⭐",
       "notes": ""
     },
     {
       "id": "c02abe66-e891-4e83-a8d9-d64df5144ad7",
-      "x": 3643.21,
-      "y": 2509.77,
-      "title": "Southern Watch",
+      "x": 3647.5,
+      "y": 2510.5,
+      "title": "South-Eastern Gate",
       "category": "site",
       "icon": "⭐",
       "notes": ""
     },
     {
       "id": "8d98e112-66b0-41aa-a79c-6e435366c930",
-      "x": 3800.76,
-      "y": 1290.04,
-      "title": "Eastern Gate",
+      "x": 1599.5,
+      "y": 2713.5,
+      "title": "South-Western Gate",
       "category": "site",
       "icon": "⭐",
       "notes": ""
     },
     {
       "id": "dd03752b-da39-4c4b-bc33-c54922866061",
-      "x": 1623.77,
-      "y": 2737.45,
-      "title": "Western Gate",
+      "x": 946.5,
+      "y": 787.5,
+      "title": "North-Western Gate",
       "category": "site",
       "icon": "⭐",
       "notes": ""
@@ -585,7 +584,7 @@
     {
       "id": "b80b839b-83eb-408d-a3a9-1ba6f0459a44",
       "x": 1150.3,
-      "y": 1498.0,
+      "y": 1498,
       "title": "Skywharf Tower",
       "category": "site",
       "icon": "⭐",
@@ -733,5 +732,5 @@
     "x": 0,
     "y": 0
   },
-  "markerScale": 1
+  "markerScale": 1.65
 }
