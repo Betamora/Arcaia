@@ -83,18 +83,18 @@
             } else {
               fetch('./map.json')
               .then(r => r.json())
-              .then(()=>{
-                setScale(defaultMap.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
-                setImageUrl(defaultMap.imageUrl || DEFAULT_IMAGE_URL);
-                setMarkers(defaultMap.markers || []);
-                setCategories(defaultMap.categories || DEFAULT_CATEGORIES);
-                setActiveLayers(defaultMap.activeLayers || Object.fromEntries((s.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
-                setMode(defaultMap.mode || "pan");
-                setActiveCat(defaultMap.activeCat || "site");
-                setSearch(defaultMap.search || "");
-                setFog(defaultMap.fog || { enabled:false, radius:140, reveals:[] });
-                setOffset(defaultMap.offset || {x:0,y:0});
-                setMarkerScale(defaultMap.markerScale ?? 1.0);
+              .then((r)=>{
+                setScale(r.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
+                setImageUrl(r.imageUrl || DEFAULT_IMAGE_URL);
+                setMarkers(r.markers || []);
+                setCategories(r.categories || DEFAULT_CATEGORIES);
+                setActiveLayers(r.activeLayers || Object.fromEntries((s.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
+                setMode(r.mode || "pan");
+                setActiveCat(r.activeCat || "site");
+                setSearch(r.search || "");
+                setFog(r.fog || { enabled:false, radius:140, reveals:[] });
+                setOffset(r.offset || {x:0,y:0});
+                setMarkerScale(r.markerScale ?? 1.0);
               })
               .catch(err => console.error('Failed to load map.json', err));
             }
