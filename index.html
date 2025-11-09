@@ -1,0 +1,488 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Solmora2 — Interactive City Map (HTML)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      html, body, #root { height: 100%; margin: 0; }
+      .no-scrollbar::-webkit-scrollbar{ display:none; }
+      .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useRef, useState } = React;
+
+      // import defaultMap from "./map.json" with { type: "json" };
+      // import defaultMap from './map.json' with {type : 'json'};
+
+      // --- Config ---
+      const DEFAULT_CATEGORIES = [
+        { id: "guild",    name: "Guilds",    color: "#f59e0b", icon: "⚔️" },
+        { id: "shop",     name: "Shops",     color: "#f472b6", icon: "🛍️" },
+        { id: "tavern",   name: "Taverns",   color: "#a78bfa", icon: "🍺" },
+        { id: "brothel",  name: "Brothels",  color: "#f43f5e", icon: "💋" },
+        { id: "site",     name: "Sites",     color: "#60a5fa", icon: "⭐" },
+      ];
+
+      const STORAGE_KEY = "arcaia-city-map-solmora2-v1";
+
+      // Default to Solmora2 external URL (more reliable than local file path)
+      const DEFAULT_IMAGE_URL = "Solmora2.jpg";
+
+      function App(){
+        // View transform
+        const [scale, setScale] = useState(1);
+        const [tx, setTx] = useState(0);
+        const [ty, setTy] = useState(0);
+        const dragRef = useRef({ dragging:false, x:0, y:0, tx0:0, ty0:0 });
+
+        // Data
+        const [imageUrl, setImageUrl] = useState(DEFAULT_IMAGE_URL);
+        const [imageError, setImageError] = useState("");
+        const [imgNatural, setImgNatural] = useState({ w: 1600, h: 1107 });
+        const [markers, setMarkers] = useState([]);
+        const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+        const [activeLayers, setActiveLayers] = useState(Object.fromEntries(DEFAULT_CATEGORIES.map(c => [c.id, true])));
+        const [mode, setMode] = useState("pan"); // pan | add | move | reveal
+        const [activeCat, setActiveCat] = useState("site");
+        const [selectedId, setSelectedId] = useState(null);
+        const [search, setSearch] = useState("");
+        const [fog, setFog] = useState({ enabled:false, radius:140, reveals:[] });
+        const [offset, setOffset] = useState({ x:0, y:0 });
+        const [markerScale, setMarkerScale] = useState(1.0);
+
+        // Refs
+        const canvasRef = useRef(null);
+        const imgRef = useRef(null);
+        const moveRef = useRef({ movingId:null, grabDX:0, grabDY:0 });
+
+        // Load/save
+        useEffect(()=>{
+          try{
+            const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+            if(s){
+              setScale(s.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
+              setImageUrl(s.imageUrl || DEFAULT_IMAGE_URL);
+              setMarkers(s.markers || []);
+              setCategories(s.categories || DEFAULT_CATEGORIES);
+              setActiveLayers(s.activeLayers || Object.fromEntries((s.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
+              setMode(s.mode || "pan");
+              setActiveCat(s.activeCat || "site");
+              setSearch(s.search || "");
+              setFog(s.fog || { enabled:false, radius:140, reveals:[] });
+              setOffset(s.offset || {x:0,y:0});
+              setMarkerScale(s.markerScale ?? 1.0);
+            } else {
+              fetch('./map.json')
+              .then(r => r.json())
+              .then(()=>{
+                setScale(defaultMap.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
+                setImageUrl(defaultMap.imageUrl || DEFAULT_IMAGE_URL);
+                setMarkers(defaultMap.markers || []);
+                setCategories(defaultMap.categories || DEFAULT_CATEGORIES);
+                setActiveLayers(defaultMap.activeLayers || Object.fromEntries((s.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
+                setMode(defaultMap.mode || "pan");
+                setActiveCat(defaultMap.activeCat || "site");
+                setSearch(defaultMap.search || "");
+                setFog(defaultMap.fog || { enabled:false, radius:140, reveals:[] });
+                setOffset(defaultMap.offset || {x:0,y:0});
+                setMarkerScale(defaultMap.markerScale ?? 1.0);
+              })
+              .catch(err => console.error('Failed to load map.json', err));
+            }
+          }catch(e){ console.warn("load fail", e); }
+        },[]);
+        useEffect(()=>{
+          try{
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ scale, tx, ty, imageUrl, markers, categories, activeLayers, mode, activeCat, search, fog, offset, markerScale }));
+          }catch{}
+        },[scale, tx, ty, imageUrl, markers, categories, activeLayers, mode, activeCat, search, fog, offset, markerScale]);
+
+        // Fit map
+        const fitToMap = ()=>{
+          const host = canvasRef.current?.getBoundingClientRect();
+          if(!host) return;
+          const sx = host.width / imgNatural.w;
+          const sy = host.height / imgNatural.h;
+          const newScale = Math.min(sx, sy) * 0.98;
+          const cx = (host.width - imgNatural.w * newScale)/2;
+          const cy = (host.height - imgNatural.h * newScale)/2;
+          setScale(newScale); setTx(cx); setTy(cy);
+        };
+
+        const onImageLoad = (e)=>{
+          const img = e.currentTarget;
+          setImgNatural({ w: img.naturalWidth || imgNatural.w, h: img.naturalHeight || imgNatural.h });
+          setImageError("");
+          fitToMap();
+        };
+
+        // Coord helpers
+        const screenToImage = (sx, sy)=>{
+          const rect = canvasRef.current?.getBoundingClientRect();
+          if(!rect) return {x:0,y:0};
+          const x = (sx - rect.left - tx) / scale - offset.x;
+          const y = (sy - rect.top  - ty) / scale - offset.y;
+          return {x,y};
+        };
+
+        // Wheel zoom
+        const onWheel = (e)=>{
+          e.preventDefault();
+          const delta = -e.deltaY;
+          const zoomFactor = 1 + Math.max(Math.min(delta/800, 0.5), -0.5);
+          const rect = canvasRef.current.getBoundingClientRect();
+          const cx = e.clientX - rect.left;
+          const cy = e.clientY - rect.top;
+          const ix = (cx - tx)/scale;
+          const iy = (cy - ty)/scale;
+          const newScale = Math.min(8, Math.max(0.2, scale * zoomFactor));
+          setScale(newScale);
+          setTx(cx - ix * newScale);
+          setTy(cy - iy * newScale);
+        };
+
+        const onMouseDown = (e)=>{
+          const rect = canvasRef.current.getBoundingClientRect();
+          if(e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+          if(mode === "pan"){
+            dragRef.current = { dragging:true, x:e.clientX, y:e.clientY, tx0:tx, ty0:ty };
+          }else if(mode === "add"){
+            const {x,y} = screenToImage(e.clientX, e.clientY);
+            const cat = categories.find(c=>c.id===activeCat) || categories[0];
+            const m = { id:crypto.randomUUID(), x:Math.round(x)+0.5, y:Math.round(y)+0.5, title:`${cat.name} ${markers.filter(mm=>mm.category===cat.id).length+1}`, category:cat.id, icon:cat.icon, notes:"" };
+            setMarkers(prev=>[...prev, m]);
+            setSelectedId(m.id);
+          }else if(mode === "reveal" && fog.enabled){
+            const {x,y} = screenToImage(e.clientX, e.clientY);
+            setFog(f=>({...f, reveals:[...f.reveals, {x,y,r:f.radius}] }));
+          }
+        };
+
+        const onMouseMove = (e)=>{
+          if(dragRef.current.dragging){
+            setTx(dragRef.current.tx0 + (e.clientX - dragRef.current.x));
+            setTy(dragRef.current.ty0 + (e.clientY - dragRef.current.y));
+          }
+          if(moveRef.current.movingId){
+            const {x,y} = screenToImage(e.clientX, e.clientY);
+            const nx = x - moveRef.current.grabDX;
+            const ny = y - moveRef.current.grabDY;
+            setMarkers(prev=>prev.map(m=> m.id===moveRef.current.movingId ? {...m, x:Math.round(nx)+0.5, y:Math.round(ny)+0.5 } : m));
+          }
+        };
+        const onMouseUp = ()=>{ dragRef.current.dragging=false; moveRef.current.movingId=null; };
+
+        // Keyboard nudges
+        useEffect(()=>{
+          const onKey = (e)=>{
+            const step = e.shiftKey ? 5 : 1;
+            if(!["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) return;
+            if(!selectedId) return;
+            e.preventDefault();
+            setMarkers(prev=>prev.map(m=>{
+              if(m.id!==selectedId) return m;
+              if(e.key==="ArrowUp") return {...m, y: m.y - step};
+              if(e.key==="ArrowDown") return {...m, y: m.y + step};
+              if(e.key==="ArrowLeft") return {...m, x: m.x - step};
+              if(e.key==="ArrowRight") return {...m, x: m.x + step};
+              return m;
+            }));
+          };
+          window.addEventListener("keydown", onKey);
+          return ()=>window.removeEventListener("keydown", onKey);
+        },[selectedId]);
+
+        // File helpers
+        const handleImageUpload = (file)=>{
+          if(!file) return;
+          if(!file.type.startsWith("image/")){ setImageError("Not an image"); return; }
+          const url = URL.createObjectURL(file);
+          setImageUrl(url);
+          const revoke = ()=>{ try{ URL.revokeObjectURL(url); }catch{}; imgRef.current?.removeEventListener("load", revoke); imgRef.current?.removeEventListener("error", revoke); };
+          imgRef.current?.addEventListener("load", revoke);
+          imgRef.current?.addEventListener("error", revoke);
+        };
+        const handleExport = ()=>{
+          const blob = new Blob([JSON.stringify({ imageUrl, imgNatural, markers, categories, activeLayers, mode, activeCat, search, fog, offset, markerScale }, null, 2)], { type:"application/json" });
+          const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `solmora2-map-${Date.now()}.json`; a.click();
+        };
+        const handleImport = (file)=>{
+          console.log(file);
+          if(!file) return;
+          const r = new FileReader();
+          r.onload = ()=>{
+            try{
+              const data = JSON.parse(r.result);
+              setImageUrl(data.imageUrl || DEFAULT_IMAGE_URL);
+              setImgNatural(data.imgNatural || imgNatural);
+              setMarkers(Array.isArray(data.markers) ? data.markers : []);
+              setCategories(Array.isArray(data.categories) ? data.categories : DEFAULT_CATEGORIES);
+              setActiveLayers(data.activeLayers || Object.fromEntries((data.categories||DEFAULT_CATEGORIES).map(c=>[c.id,true])));
+              setMode(data.mode || "pan");
+              setActiveCat(data.activeCat || "site");
+              setSearch(data.search || "");
+              setFog(data.fog || {enabled:false, radius:140, reveals:[]});
+              setOffset(data.offset || {x:0,y:0});
+              setMarkerScale(data.markerScale ?? 1.0);
+            }catch{ alert("Invalid JSON"); }
+          };
+          r.readAsText(file);
+        };
+
+        // Seed 75 POIs
+        const create = (x,y,title,category,icon,notes="")=>({ id:crypto.randomUUID(), x,y,title,category,icon,notes });
+        const place = (i,n,pad=80)=>{
+          const w = imgNatural.w, h = imgNatural.h;
+          const cols = Math.ceil(Math.sqrt(n));
+          const rows = Math.ceil(n/cols);
+          const cw = (w - pad*2)/Math.max(cols,1);
+          const ch = (h - pad*2)/Math.max(rows,1);
+          const r = Math.floor(i/cols);
+          const c = i%cols;
+          const jx = cw*0.3*(Math.random()-0.5);
+          const jy = ch*0.3*(Math.random()-0.5);
+          return { x: Math.round(pad + c*cw + cw/2 + jx), y: Math.round(pad + r*ch + ch/2 + jy) };
+        };
+        const seed = ()=>{
+          const list = [];
+          list.push(create(Math.round(imgNatural.w*0.48), Math.round(imgNatural.h*0.47), "The Adventurers' Tower", "site", "🗼"));
+          list.push(create(Math.round(imgNatural.w*0.50), Math.round(imgNatural.h*0.56), "Neutral Conclave Hall", "site", "🏛️"));
+          list.push(create(Math.round(imgNatural.w*0.80), Math.round(imgNatural.h*0.25), "Restricted Portal Gate", "site", "🌀"));
+          ["Radiant Accord Guildhall","Midnight Covenant Guildhall","Ember Pact Guildhall","Verdant Synod Guildhall","Infinite Chorus Guildhall","Shattered Assembly Guildhall"]
+            .forEach((name,i)=>{ const p=place(i,6,120); list.push(create(p.x,p.y,name,"guild","⚔️")); });
+          ["Sunhammer & Sons (Master Smiths)","Auric Atelier (Fine Jewels)","Gilded Standard (Armorer)","Brightmantle Books","Helios Provisions","Silver Banner Tailors","Umbral Curios (Oddities)","The Shade Ledger (Informations)","Whisperglass (Spycraft Tools)","Night’s Ink (Scribes)","Moonstill Apothecary","Veil & Vellum (Stationers)","Hammer & Halo Forge","Fizz & Fire Alchemics","Sparkwrights Consortium","Ignis Implements","Cindersteel Smithery","Boom & Brass (Artificers)","Far-Reach Cartography","Salvage & Sprocket"]
+            .forEach((name,i)=>{ const p=place(i,20,60); list.push(create(p.x,p.y,name,"shop","🛍️")); });
+          ["The Dawnfeast Hall","Knight’s Respite","The Golden Cup","The Velvet Cellar","The Black Candle Lounge","Last Whisper","The Forgequench","Cinder & Cask","The Smelter’s Rest","The Willow Mead","Midspring Commons","Boar & Barley"]
+            .forEach((name,i)=>{ const p=place(i,12,80); list.push(create(p.x,p.y,name,"tavern","🍺")); });
+          ["The Luminous Veil","House of Masks","Ember Kiss","The Garden of Delights","Gossamer Rooms","The Ragpicker’s Delight"]
+            .forEach((name,i)=>{ const p=place(i,6,100); list.push(create(p.x,p.y,name,"brothel","💋")); });
+          ["Grand Market Square","Scholarium Arcanum (Library)","Arena of Echoes","Public Bathhouse","Harbormaster's Office","Healer's Clinic"]
+            .forEach((name,i)=>{ const p=place(i,6,140); list.push(create(p.x,p.y,name,"site","⭐")); });
+          const moreSites = [
+            "City Archives","Magistrate Courts","Rivergate Bridge","Moonstone Bridge","Old Lighthouse","Northern Watch","Southern Watch","Eastern Gate","Western Gate","Guild Registry","Cartographers’ Guild","Skywharf Tower","Artisan’s Plaza","Garden Conservatory","Temple of the Six","Pilgrim’s Hostel","Veterans’ Barracks","City Kennels","Arcane Foundry","Civic Amphitheater","Steam Baths of Ember","Verdant Menagerie"
+          ];
+          moreSites.forEach((name,i)=>{ const p=place(i,moreSites.length,90); list.push(create(p.x,p.y,name,"site","⭐")); });
+          if(list.length !== 75){ console.warn("Seed produced", list.length, "POIs (expected 75)"); }
+          if(markers.length && !confirm("Add 75 Solmora2 POIs to existing markers?")) return;
+          setMarkers(prev=>[...prev, ...list]);
+        };
+
+        const filtered = useMemo(()=>{
+          const s = search.trim().toLowerCase();
+          return markers.filter(m=>{
+            if(!activeLayers[m.category]) return false;
+            if(!s) return true;
+            return (m.title||"").toLowerCase().includes(s) || (m.notes||"").toLowerCase().includes(s);
+          });
+        },[markers, activeLayers, search]);
+
+        const selected = markers.find(m=>m.id===selectedId) || null;
+        const updateMarker = (id, patch)=> setMarkers(prev=>prev.map(m=> m.id===id ? {...m, ...patch} : m));
+        const removeMarker = (id)=>{ setMarkers(prev=>prev.filter(m=>m.id!==id)); if(selectedId===id) setSelectedId(null); };
+
+        // if (markers.length == 0) {console.log('list contains no data!')}
+        // console.log(markers);
+
+        return (
+          <div className="w-full h-[88vh] flex bg-slate-950 text-slate-100">
+            <div className="w-80 shrink-0 border-r border-slate-800 p-3 space-y-3 overflow-y-auto no-scrollbar">
+              <h1 className="text-xl font-semibold">Solmora2 — Interactive Map</h1>
+              <p className="text-sm text-slate-400">Pan/Zoom, Add/Move pins, Fog, Import/Export, Autosave</p>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={()=>setMode("pan")}   className={"px-3 py-2 rounded-xl border " + (mode==="pan"   ?"bg-slate-800 border-slate-600":"border-slate-700 hover:bg-slate-900")}>🖐️ Pan</button>
+                <button onClick={()=>setMode("add")}   className={"px-3 py-2 rounded-xl border " + (mode==="add"   ?"bg-slate-800 border-slate-600":"border-slate-700 hover:bg-slate-900")}>📍 Add</button>
+                <button onClick={()=>setMode("move")}  className={"px-3 py-2 rounded-xl border " + (mode==="move"  ?"bg-slate-800 border-slate-600":"border-slate-700 hover:bg-slate-900")}>🧲 Move</button>
+                <button onClick={()=>setMode("reveal")}className={"px-3 py-2 rounded-xl border " + (mode==="reveal"?"bg-slate-800 border-slate-600":"border-slate-700 hover:bg-slate-900")}>🌫️ Reveal</button>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm">Active Category</label>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map(c=>(
+                    <button key={c.id} onClick={()=>setActiveCat(c.id)} title={c.name}
+                      className={"px-2.5 py-1.5 rounded-full text-sm border " + (activeCat===c.id? "bg-slate-800 border-slate-500":"border-slate-700 hover:bg-slate-900")}
+                      style={{ boxShadow: activeCat===c.id? `0 0 0 2px ${c.color} inset` : undefined }}>
+                      {c.icon} {c.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm">Layers</label>
+                <div className="space-y-1">
+                  {categories.map(c=>(
+                    <label key={c.id} className="flex items-center justify-between gap-2 text-sm bg-slate-900/40 rounded-xl px-3 py-2">
+                      <span className="flex items-center gap-2"><span style={{color:c.color}}>●</span> {c.icon} {c.name}</span>
+                      <input type="checkbox" checked={!!activeLayers[c.id]} onChange={(e)=>setActiveLayers({...activeLayers,[c.id]:e.target.checked})}/>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm">Search</label>
+                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="tavern, forge, portal..." className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700"/>
+                <div className="text-xs text-slate-400">{filtered.length} visible of {markers.length} total</div>
+              </div>
+
+              <div className="space-y-3 pt-1">
+                <div className="flex gap-2 flex-wrap">
+                  <button onClick={()=>{setScale(1); setTx(0); setTy(0);}} className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900">Reset View</button>
+                  <button onClick={fitToMap} className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900">Fit to Map</button>
+                  <button onClick={()=>setImageUrl(DEFAULT_IMAGE_URL)} className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900">Use Solmora2</button>
+                  <label className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900 cursor-pointer">
+                    <input type="file" accept="image/*" className="hidden" onChange={e=>handleImageUpload(e.target.files?.[0])} />
+                    Upload Map
+                  </label>
+                  <button onClick={seed} className="px-3 py-2 rounded-xl border border-emerald-600 hover:bg-slate-900">Seed 75 POIs</button>
+                  <button onClick={handleExport} className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900">Export JSON</button>
+                  <label className="px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-900 cursor-pointer">
+                    <input type="file" accept="application/json" className="hidden" onChange={e=>handleImport(e.target.files?.[0])} />
+                    Import JSON
+                  </label>
+                </div>
+                {imageError && <div className="text-xs text-rose-400">{imageError}</div>}
+              </div>
+
+              <div className="space-y-2 border-t border-slate-800 pt-3">
+                <div className="text-sm font-semibold">Marker Scale</div>
+                <input type="range" min="0.6" max="1.4" step="0.05" value={markerScale} onChange={e=>setMarkerScale(parseFloat(e.target.value))} className="w-full"/>
+                <div className="text-xs text-slate-400">Current: {markerScale.toFixed(2)}×</div>
+              </div>
+
+              <div className="space-y-2 border-t border-slate-800 pt-3">
+                <div className="text-sm font-semibold">Global Pin Offset</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="bg-slate-900 border border-slate-700 rounded-xl p-2">Offset X
+                    <input type="number" className="w-full bg-transparent" value={offset.x} onChange={e=>setOffset({...offset, x: parseFloat(e.target.value)||0})}/>
+                  </label>
+                  <label className="bg-slate-900 border border-slate-700 rounded-xl p-2">Offset Y
+                    <input type="number" className="w-full bg-transparent" value={offset.y} onChange={e=>setOffset({...offset, y: parseFloat(e.target.value)||0})}/>
+                  </label>
+                </div>
+                <div className="flex gap-2 text-sm">
+                  <button className="px-2 py-1 rounded-lg border border-slate-700" onClick={()=>setOffset(o=>({...o,x:o.x-1}))}>← X-1</button>
+                  <button className="px-2 py-1 rounded-lg border border-slate-700" onClick={()=>setOffset(o=>({...o,x:o.x+1}))}>X+1 →</button>
+                  <button className="px-2 py-1 rounded-lg border border-slate-700" onClick={()=>setOffset(o=>({...o,y:o.y-1}))}>↑ Y-1</button>
+                  <button className="px-2 py-1 rounded-lg border border-slate-700" onClick={()=>setOffset(o=>({...o,y:o.y+1}))}>Y+1 ↓</button>
+                  <button className="ml-auto px-2 py-1 rounded-lg border border-slate-700"
+                    onClick={()=>{ if(!markers.length) return; if(!confirm("Bake this offset into all markers?")) return;
+                      setMarkers(ms=>ms.map(m=>({...m, x:m.x+offset.x, y:m.y+offset.y })));
+                      setOffset({x:0,y:0});
+                    }}>Apply to Markers</button>
+                </div>
+              </div>
+
+              {selected && (
+                <div className="space-y-2 border-t border-slate-800 pt-3">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-semibold">Selected Marker</h2>
+                    <button onClick={()=>removeMarker(selected.id)} className="text-xs text-rose-400 hover:underline">Delete</button>
+                  </div>
+                  <input className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700" value={selected.title} onChange={e=>updateMarker(selected.id,{title:e.target.value})} />
+                  <select className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700" value={selected.category} onChange={e=>updateMarker(selected.id,{category:e.target.value})}>
+                    {categories.map(c=>(<option key={c.id} value={c.id}>{c.name}</option>))}
+                  </select>
+                  <div className="flex gap-2">
+                    <input className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700" value={selected.icon||""} onChange={e=>updateMarker(selected.id,{icon:e.target.value})} placeholder="Emoji or short text"/>
+                    <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-center">{selected.icon}</div>
+                  </div>
+                  <textarea rows="3" className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700" value={selected.notes||""} onChange={e=>updateMarker(selected.id,{notes:e.target.value})} placeholder="Rumors, NPCs, hooks..."/>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <label className="bg-slate-900 border border-slate-700 rounded-xl p-2">X
+                      <input type="number" className="w-full bg-transparent" value={selected.x} onChange={e=>updateMarker(selected.id,{x:parseFloat(e.target.value)})}/>
+                    </label>
+                    <label className="bg-slate-900 border border-slate-700 rounded-xl p-2">Y
+                      <input type="number" className="w-full bg-transparent" value={selected.y} onChange={e=>updateMarker(selected.id,{y:parseFloat(e.target.value)})}/>
+                    </label>
+                  </div>
+                  <div className="text-xs text-slate-400">Tip: In Move mode, drag; Arrow keys nudge (⇧=5px)</div>
+                </div>
+              )}
+
+              <div className="space-y-1 border-t border-slate-800 pt-3">
+                <div className="text-sm font-semibold">Markers</div>
+                <div className="max-h-56 overflow-y-auto no-scrollbar space-y-1 pr-1">
+                  {filtered.map(m=>(
+                    <button key={m.id} onClick={()=>setSelectedId(m.id)} className={"w-full text-left px-3 py-2 rounded-xl border " + (selectedId===m.id?"bg-slate-800 border-slate-600":"border-slate-700 hover:bg-slate-900")}>
+                      <div className="text-sm flex items-center justify-between">
+                        <span className="truncate">{m.icon} {m.title}</span>
+                        <span className="text-xs text-slate-400">{m.category}</span>
+                      </div>
+                      {m.notes && <div className="text-xs text-slate-400 truncate">{m.notes}</div>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 relative select-none overflow-hidden"
+              onWheel={onWheel} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp}
+              ref={canvasRef}>
+              <div className="absolute" style={{ left:tx, top:ty, transform:`scale(${scale})`, transformOrigin:"0 0" }}>
+                <div className="relative" style={{ width: imgNatural.w, height: imgNatural.h }}>
+                  <img ref={imgRef} src={imageUrl} width={imgNatural.w} height={imgNatural.h}
+                       onLoad={onImageLoad} onError={()=>setImageError("Failed to load image (CORS or URL). Try Use Solmora2 or Upload Map.")}
+                       className="absolute left-0 top-0 select-none pointer-events-none shadow-2xl" alt="Solmora map" draggable="false"/>
+
+                  <svg width={imgNatural.w} height={imgNatural.h} className="absolute left-0 top-0 pointer-events-none" style={{opacity:0.12}}>
+                    {Array.from({length: Math.ceil(imgNatural.w/64)}).map((_,i)=>(<line key={"v"+i} x1={i*64} x2={i*64} y1={0} y2={imgNatural.h} stroke="#fff" strokeWidth={1}/>))}
+                    {Array.from({length: Math.ceil(imgNatural.h/64)}).map((_,i)=>(<line key={"h"+i} y1={i*64} y2={i*64} x1={0} x2={imgNatural.w} stroke="#fff" strokeWidth={1}/>))}
+                  </svg>
+
+                  {filtered.map(m=>(
+                    <div key={m.id} className="absolute"
+                      style={{ left:m.x + offset.x, top:m.y + offset.y, transform:`translate(-50%, -100%) scale(${markerScale})`, transformOrigin:"50% 100%" }}
+                      onMouseDown={(e)=>{ if(mode==="move"){ e.stopPropagation(); setSelectedId(m.id); const p=screenToImage(e.clientX,e.clientY); moveRef.current={ movingId:m.id, grabDX:p.x-m.x, grabDY:p.y-m.y }; } }}
+                      onMouseUp={(e)=>{ if(mode==="move"){ e.stopPropagation(); moveRef.current.movingId=null; } }}
+                      onClick={(e)=>{ e.stopPropagation(); setSelectedId(m.id); }}
+                    >
+                      <div className="px-2 py-1 rounded-xl shadow-lg border text-xs bg-slate-900/90" style={{ borderColor: (categories.find(c=>c.id===m.category)?.color)||"#64748b" }}>
+                        <div className="flex items-center gap-1">
+                          <span>{m.icon}</span><span className="font-medium">{m.title}</span>
+                        </div>
+                      </div>
+                      <div className="w-1 h-1 mx-auto mt-0.5 rounded-full" style={{ background:(categories.find(c=>c.id===m.category)?.color)||"#64748b" }}></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {fog.enabled && (
+                <svg className="absolute inset-0 pointer-events-none">
+                  <defs>
+                    <mask id="reveal">
+                      <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                      {fog.reveals.map((r,i)=>(
+                        <circle key={i} cx={(r.x+offset.x)*scale+tx} cy={(r.y+offset.y)*scale+ty} r={r.r} />
+                      ))}
+                    </mask>
+                  </defs>
+                  <rect x="0" y="0" width="100%" height="100%" fill="black" opacity="0.65" mask="url(#reveal)"/>
+                </svg>
+              )}
+
+              <div className="absolute left-2 bottom-2 text-xs text-slate-300 bg-slate-900/70 border border-slate-800 rounded-xl px-2 py-1">
+                Wheel=zoom • Drag=pan • Mode: <span className="font-semibold">{mode}</span>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App/>);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,736 @@
+{
+  "imageUrl": "Solmora2.jpg",
+  "imgNatural": {
+    "w": 1280,
+    "h": 989
+  },
+  "markers": [
+    {
+      "id": "739df595-53c6-4b3c-b05b-e58553e0e951",
+      "x": 602.5,
+      "y": 172.5,
+      "title": "Spire of Atonement",
+      "category": "site",
+      "icon": "🗼",
+      "notes": ""
+    },
+    {
+      "id": "a87af5d5-4efc-4141-bace-bdb6f7802a82",
+      "x": 982.5,
+      "y": 274.5,
+      "title": "Neutral Conclave Hall",
+      "category": "site",
+      "icon": "🏛️",
+      "notes": ""
+    },
+    {
+      "id": "4ad40c6d-d841-4853-92a7-97b15a6210dd",
+      "x": 920.5,
+      "y": 254.5,
+      "title": "Restricted Portal Gate",
+      "category": "site",
+      "icon": "🌀",
+      "notes": ""
+    },
+    {
+      "id": "8b4dd254-2f82-4d04-a57e-fc4e5c0d3439",
+      "x": 282.5,
+      "y": 562.5,
+      "title": "Radiant Accord Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "a064e5eb-6083-48c4-9394-7eadfa2c0e3b",
+      "x": 1074.5,
+      "y": 414.5,
+      "title": "Midnight Covenant Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "850e7256-8f42-4cfc-ac2a-970803f96846",
+      "x": 319.5,
+      "y": 303.5,
+      "title": "Ember Pact Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "3e8ee876-3374-46b2-a103-50e248ad4f3e",
+      "x": 612.5,
+      "y": 347.5,
+      "title": "Verdant Synod Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "df5db5b7-d60a-49d2-9f4f-0d69c71bc084",
+      "x": 555.5,
+      "y": 456.5,
+      "title": "Infinite Chorus Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "6d40e21a-a508-4720-a8aa-efa5dc0f58f4",
+      "x": 160.5,
+      "y": 536.5,
+      "title": "Shattered Assembly Guildhall",
+      "category": "guild",
+      "icon": "⚔️",
+      "notes": ""
+    },
+    {
+      "id": "9b3bb7bd-0bf9-43c8-990c-43b84c57479e",
+      "x": 426.5,
+      "y": 319.5,
+      "title": "Sunhammer & Sons (Master Smiths)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "c83c0403-3b4e-4ffc-b94a-54040125a198",
+      "x": 550.5,
+      "y": 668.5,
+      "title": "Auric Atelier (Fine Jewels)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "1f644f47-9420-45f0-9477-78199b5ca618",
+      "x": 428.5,
+      "y": 613.5,
+      "title": "Gilded Standard (Armorer)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "9db021fe-6e16-44c8-aaa7-b55cd862c44f",
+      "x": 445.5,
+      "y": 205.5,
+      "title": "Brightmantle Books",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "d8b6a902-7521-40b6-b5e9-f3ba9aca627b",
+      "x": 821.5,
+      "y": 535.5,
+      "title": "Helios Provisions",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "fb83471b-05b0-467e-ba14-b0fee1352487",
+      "x": 951.5,
+      "y": 727.5,
+      "title": "Silver Banner Tailors",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "783f613d-285d-494a-9d63-f70114fa06e5",
+      "x": 956.5,
+      "y": 434.5,
+      "title": "Umbral Curios (Oddities)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "a3c54ff3-0180-4a5e-89ef-4be38d760e7f",
+      "x": 1061.5,
+      "y": 620.5,
+      "title": "The Shade Ledger (Informations)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "bdc8b974-c7a3-4a34-83a6-a01cdf19db79",
+      "x": 1132.5,
+      "y": 479.5,
+      "title": "Whisperglass (Spycraft Tools)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "37dabeca-0247-44fa-bc68-a49accbeccfb",
+      "x": 821.5,
+      "y": 790.5,
+      "title": "Night’s Ink (Scribes)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "c915bde8-f042-4f4b-903d-60475d8cad8b",
+      "x": 500.5,
+      "y": 358.5,
+      "title": "Moonstill Apothecary",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "2ffed1f6-5f20-47a2-b5eb-83d99781a863",
+      "x": 1094.5,
+      "y": 701.5,
+      "title": "Veil & Vellum (Stationers)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "d6a101ac-9c2a-4b96-92a2-a055fe08d8c2",
+      "x": 1012.5,
+      "y": 679.5,
+      "title": "Hammer & Halo Forge",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "879775e1-d24a-48cc-a93c-20cbb2945c8a",
+      "x": 573.5,
+      "y": 314.5,
+      "title": "Fizz & Fire Alchemics",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "ba7ba54e-df21-45c2-bc35-54bd5fefb45c",
+      "x": 856.5,
+      "y": 453.5,
+      "title": "Sparkwrights Consortium",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "c592d1ea-77a0-4e96-aca6-d31d142bb9f7",
+      "x": 256.5,
+      "y": 344.5,
+      "title": "Ignis Implements",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "0c75ea8e-f6df-4286-b6ff-dc5f98545a69",
+      "x": 829.5,
+      "y": 270.5,
+      "title": "Cindersteel Smithery",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "60cfa0b8-bafb-48e6-bf3b-d4f29bd81ce2",
+      "x": 551.5,
+      "y": 509.5,
+      "title": "Boom & Brass (Artificers)",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "9eb36c98-bf3a-4d5b-b59e-3003f7940866",
+      "x": 112.5,
+      "y": 833.5,
+      "title": "Far-Reach Cartography",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "b126bf93-14da-44a7-b34e-97dd16fdff06",
+      "x": 755.5,
+      "y": 317.5,
+      "title": "Salvage & Sprocket",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": ""
+    },
+    {
+      "id": "882b8ce1-479c-4fe0-92ce-c3d04ca1637b",
+      "x": 297.5,
+      "y": 634.5,
+      "title": "The Dawnfeast Hall",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "82bb7edc-8839-4740-8f66-9783499961d7",
+      "x": 619.5,
+      "y": 554.5,
+      "title": "Knight’s Respite",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "35efd200-021a-4297-860e-dc7f62a2824f",
+      "x": 498.5,
+      "y": 256.5,
+      "title": "The Golden Cup",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "cf46a4d8-b75d-47cb-8e24-f7ec0e6857bf",
+      "x": 738.5,
+      "y": 473.5,
+      "title": "The Velvet Cellar",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "a5b306b3-c06a-4229-b085-2967268a5f57",
+      "x": 795.5,
+      "y": 223.5,
+      "title": "The Black Candle Lounge",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "d03af767-6153-403c-b3e6-09b4616dc5da",
+      "x": 1138.5,
+      "y": 659.5,
+      "title": "Last Whisper",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "2ee6496e-8d65-4723-856a-dfeb6b795c6f",
+      "x": 187.5,
+      "y": 423.5,
+      "title": "The Forgequench",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "c4c8ae3a-3a6f-4268-b5ed-c441610be93d",
+      "x": 1000.5,
+      "y": 524.5,
+      "title": "Cinder & Cask",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "0e855f44-f5ae-4ea4-a86c-71f78d3b0e23",
+      "x": 378.5,
+      "y": 364.5,
+      "title": "The Smelter’s Rest",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "1f09d9ce-6e7e-484a-8760-e0f7cd492683",
+      "x": 374.5,
+      "y": 709.5,
+      "title": "The Willow Mead",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "252eec21-e2db-48b1-a4f9-b579311b1721",
+      "x": 464.5,
+      "y": 555.5,
+      "title": "Midspring Commons",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "b6f44044-b78b-479b-b77f-ac7aea53789e",
+      "x": 759.5,
+      "y": 636.5,
+      "title": "Boar & Barley",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": ""
+    },
+    {
+      "id": "ab82d6f9-9e8c-42e8-b57c-1f37abbd984a",
+      "x": 790.5,
+      "y": 433.5,
+      "title": "The Luminous Veil",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "59195860-57fb-4b7d-a29f-6829ebc9a980",
+      "x": 957.5,
+      "y": 392.5,
+      "title": "House of Masks",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "c8fa4f24-025c-4cff-a063-c3fb5b250a7b",
+      "x": 267.5,
+      "y": 397.5,
+      "title": "Ember Kiss",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "7de9267b-b6ca-426d-99e5-860d37327fcd",
+      "x": 566.5,
+      "y": 386.5,
+      "title": "The Garden of Delights",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "dc38cd56-216b-4ecd-aad4-1db6066bcc64",
+      "x": 492.5,
+      "y": 751.5,
+      "title": "Gossamer Rooms",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "d1883075-cecd-4ce2-b441-9922d3fe9a43",
+      "x": 955.5,
+      "y": 628.5,
+      "title": "The Ragpicker’s Delight",
+      "category": "brothel",
+      "icon": "💋",
+      "notes": ""
+    },
+    {
+      "id": "ed2d8848-5a92-4d79-b3de-78da01c4bdc6",
+      "x": 658.5,
+      "y": 667.5,
+      "title": "Grand Market Square",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "d9976e40-b9a9-478d-b31f-b1898e5c78ce",
+      "x": 400.5,
+      "y": 181.5,
+      "title": "Scholarium Arcanum (Library)",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "50515fe3-8120-48a0-b694-a693efdfc4fe",
+      "x": 66.5,
+      "y": 156.5,
+      "title": "Arena of Echoes",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "aa0117de-96b6-443e-807c-345401f0bc24",
+      "x": 698.5,
+      "y": 426.5,
+      "title": "Public Bathhouse",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "d28111c8-ac32-433d-b734-873d1f815065",
+      "x": 249.5,
+      "y": 451.5,
+      "title": "Harbormaster's Office",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "22e53e0b-3b61-4f4a-a84c-0853cea085e1",
+      "x": 706.5,
+      "y": 336.5,
+      "title": "Healer's Clinic",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "61e2f5df-8987-4299-b256-4489c7d66a2a",
+      "x": 620.5,
+      "y": 453.5,
+      "title": "City Archives",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "6bf45153-c35a-46ca-8a5c-6ce9d46d988c",
+      "x": 820.5,
+      "y": 178.5,
+      "title": "Magistrate Courts",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "58de9ce8-dedf-4e97-b263-8f8bcc772181",
+      "x": 403.5,
+      "y": 522.5,
+      "title": "Rivergate Bridge",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "f217d0de-526d-4748-b400-56d77b1df79a",
+      "x": 334.5,
+      "y": 530.5,
+      "title": "Moonstone Bridge",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "54a489b1-f320-4c39-8cc1-9afdbbe8d2d9",
+      "x": 44.5,
+      "y": 666.5,
+      "title": "Old Lighthouse",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "367f763f-3158-4a81-a19d-93e7d5075646",
+      "x": 286.5,
+      "y": 238.5,
+      "title": "Northern Watch",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "c02abe66-e891-4e83-a8d9-d64df5144ad7",
+      "x": 1103.5,
+      "y": 746.5,
+      "title": "Southern Watch",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "8d98e112-66b0-41aa-a79c-6e435366c930",
+      "x": 1144.5,
+      "y": 388.5,
+      "title": "Eastern Gate",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "dd03752b-da39-4c4b-bc33-c54922866061",
+      "x": 488.5,
+      "y": 819.5,
+      "title": "Western Gate",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "31e69469-504a-4521-a439-5be1aecee8eb",
+      "x": 997.5,
+      "y": 299.5,
+      "title": "Guild Registry",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "f40859f3-c8e3-42b5-a626-02275cbd901b",
+      "x": 83.5,
+      "y": 849.5,
+      "title": "Cartographers’ Guild",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "b80b839b-83eb-408d-a3a9-1ba6f0459a44",
+      "x": 345.5,
+      "y": 450.5,
+      "title": "Skywharf Tower",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "1afde43e-4b2b-4ba6-9804-05ef8b5e1f8a",
+      "x": 346.5,
+      "y": 261.5,
+      "title": "Artisan’s Plaza",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "4eab365f-6f84-4f6f-825d-3305a7c177ad",
+      "x": 594.5,
+      "y": 807.5,
+      "title": "Garden Conservatory",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "d51f2f52-79b7-4fd5-9a8f-ac2ea35d9cbb",
+      "x": 543.5,
+      "y": 149.5,
+      "title": "Temple of the Six",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "027c33c3-e2f4-45ad-8cb2-32504df811a7",
+      "x": 940.5,
+      "y": 534.5,
+      "title": "Pilgrim’s Hostel",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "002f9789-3c09-4bb4-9f72-fabf670fb77f",
+      "x": 592.5,
+      "y": 595.5,
+      "title": "Veterans’ Barracks",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "c5808f1c-8f55-42ca-af65-15c048ce756b",
+      "x": 207.5,
+      "y": 731.5,
+      "title": "City Kennels",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "d347ee8f-0dc9-44b2-a69d-e3bcdd48cd14",
+      "x": 779.5,
+      "y": 711.5,
+      "title": "Arcane Foundry",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "8e82549d-ad7c-434c-b272-22c5c9b80229",
+      "x": 701.5,
+      "y": 290.5,
+      "title": "Civic Amphitheater",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "165095f9-cf5a-49fb-a916-912f78b70dc2",
+      "x": 194.5,
+      "y": 397.5,
+      "title": "Steam Baths of Ember",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    },
+    {
+      "id": "fe446d7b-92cc-4e8d-8e15-5afa5369b32a",
+      "x": 611.5,
+      "y": 724.5,
+      "title": "Verdant Menagerie",
+      "category": "site",
+      "icon": "⭐",
+      "notes": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": "guild",
+      "name": "Guilds",
+      "color": "#f59e0b",
+      "icon": "⚔️"
+    },
+    {
+      "id": "shop",
+      "name": "Shops",
+      "color": "#f472b6",
+      "icon": "🛍️"
+    },
+    {
+      "id": "tavern",
+      "name": "Taverns",
+      "color": "#a78bfa",
+      "icon": "🍺"
+    },
+    {
+      "id": "brothel",
+      "name": "Brothels",
+      "color": "#f43f5e",
+      "icon": "💋"
+    },
+    {
+      "id": "site",
+      "name": "Sites",
+      "color": "#60a5fa",
+      "icon": "⭐"
+    }
+  ],
+  "activeLayers": {
+    "guild": true,
+    "shop": true,
+    "tavern": true,
+    "brothel": true,
+    "site": true
+  },
+  "mode": "pan",
+  "activeCat": "site",
+  "search": "",
+  "fog": {
+    "enabled": false,
+    "radius": 140,
+    "reveals": []
+  },
+  "offset": {
+    "x": 0,
+    "y": 0
+  },
+  "markerScale": 0.6
+}
