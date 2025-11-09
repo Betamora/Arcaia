@@ -69,6 +69,7 @@
           try{
             const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
             if(s){
+              
               setScale(s.scale ?? 1); setTx(s.tx ?? 0); setTy(s.ty ?? 0);
               setImageUrl(s.imageUrl || DEFAULT_IMAGE_URL);
               setMarkers(s.markers || []);
@@ -81,12 +82,13 @@
               setOffset(s.offset || {x:0,y:0});
               setMarkerScale(s.markerScale ?? 1.0);
             } else {
+              // "scale":0.8106354032375883,"tx":151.4289741716239,"ty":29.62440582834222
               fetch('./map.json')
               .then(r => r.json())
               .then((r)=>{
                 setScale(r.scale ?? 1); 
-                setTx(0); 
-                setTy(0);
+                setTx(r.tx || 0); 
+                setTy(r.ty || 0);
                 setImageUrl(r.imageUrl || DEFAULT_IMAGE_URL);
                 setMarkers(r.markers || []);
                 setCategories(r.categories || DEFAULT_CATEGORIES);
