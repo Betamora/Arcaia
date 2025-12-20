@@ -679,6 +679,33 @@
       "category": "site",
       "icon": "⭐",
       "notes": ""
+    },
+    {
+      "id": "3ea13e2a-d8e4-4b22-8939-ac2eec4969f1",
+      "x": 639.5,
+      "y": 2004.5,
+      "title": "Smuggler’s Wharf",
+      "category": "site",
+      "icon": "⭐",
+      "notes": "Primary hideout for Kass and the Starless Crew. Features a hidden tunnel that leads to the canals beneath Solmora."
+    },
+    {
+      "id": "41fee645-db6a-4dcb-9159-03f0079c8656",
+      "x": 3679.5,
+      "y": 1780.5,
+      "title": "The Black Flask",
+      "category": "tavern",
+      "icon": "🍺",
+      "notes": "Entrance to the Underveil; Mother Miren’s: shop and infirmary; Kass’s fallback refuge."
+    },
+    {
+      "id": "98ce308e-d0a0-49df-972e-9af9a6d6d6a1",
+      "x": 2622.5,
+      "y": 1973.5,
+      "title": "Runebreaker’s Forge",
+      "category": "shop",
+      "icon": "🛍️",
+      "notes": "Berzal’s shop, doubles as a secondary stash point."
     }
   ],
   "categories": [
